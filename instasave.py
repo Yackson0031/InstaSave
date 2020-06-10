@@ -8,7 +8,7 @@ import sys
 print(''' 
 
 01001001 01101110 01110011 01110100 01100001 01010011 01100001 01110110 01100101 
-                        [Coded By Sameera Madushan]
+                        [Coded Edited By Yackson0031]
 
 ''')
 
@@ -89,77 +89,24 @@ def download_image_video():
         print("Unknown URL")
 
 
-# Function to download profile picture of instagram accounts
-def pp_download():
-    url = input("Please enter the URL of the profile: ")
-    x = re.match(r'^(https:)[/][/]www.([^/]+[.])*instagram.com', url)
-
-    if x:
-        check_url1 = re.match(r'^(https:)[/][/]www.([^/]+[.])*instagram.com[/].*\?hl=[a-z-]{2,5}', url)
-        check_url2 = re.match(
-            r'^(https:)[/][/]www.([^/]+[.])*instagram.com$|^(https:)[/][/]www.([^/]+[.])*instagram.com/$', url)
-        check_url3 = re.match(r'^(https:)[/][/]www.([^/]+[.])*instagram.com[/][a-zA-Z0-9_]{1,}$', url)
-        check_url4 = re.match(r'^(https:)[/][/]www.([^/]+[.])*instagram.com[/][a-zA-Z0-9_]{1,}[/]$', url)
-
-        if check_url3:
-            final_url = url + '/?__a=1'
-
-        if check_url4:
-            final_url = url + '?__a=1'
-
-        if check_url2:
-            final_url = print("Please enter an URL related to a profile")
-            exit()
-
-        if check_url1:
-            alpha = check_url1.group()
-            final_url = re.sub('\\?hl=[a-z-]{2,5}', '?__a=1', alpha)
-
-    try:
-        if check_url3 or check_url4 or check_url2 or check_url1:
-            req = requests.get(final_url)
-            get_status = requests.get(final_url).status_code
-            get_content = req.content.decode('utf-8')
-
-            if get_status == 200:
-                print("\nDownloading the image...")
-                find_pp = re.search(r'profile_pic_url_hd\":\"([^\'\" >]+)', get_content)
-                pp_link = find_pp.group()
-                pp_final = re.sub('profile_pic_url_hd":"', '', pp_link)
-                file_size_request = requests.get(pp_final, stream=True)
-                file_size = int(file_size_request.headers['Content-Length'])
-                block_size = 1024
-                filename = datetime.strftime(datetime.now(), '%Y-%m-%d-%H-%M-%S')
-                t = tqdm(total=file_size, unit='B', unit_scale=True, desc=filename, ascii=True)
-                with open(filename + '.jpg', 'wb') as f:
-                    for data in file_size_request.iter_content(block_size):
-                        t.update(len(data))
-                        f.write(data)
-                t.close()
-                print("Profile picture downloaded successfully")
-
-    except Exception:
-        print('error')
-
-
-if connection() == True:
+if connection():
     try:
         while True:
-            a = "Press 'A' to download an instagram profile picture.\nPress 'B' to download an instagram photo or video.\nPress 'Q' to exit."
+            a = "Press 'A' to download an instagram photo or " \
+                "video.\nPress 'Q' to exit. "
             print(a)
             select = str(input("\nInstaSave > ")).upper()
             try:
                 if select == 'A':
-                    pp_download()
-                if select == 'B':
                     download_image_video()
                 if select == 'Q':
                     sys.exit()
                 else:
+                    print('You don dullam, shutting down...')
                     sys.exit()
-            except (KeyboardInterrupt):
+            except KeyboardInterrupt:
                 print("Programme Interrupted")
-    except(KeyboardInterrupt):
+    except KeyboardInterrupt:
         print("\nProgramme Interrupted")
 else:
     sys.exit()
